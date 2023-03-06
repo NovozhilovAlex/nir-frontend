@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import {Layout, theme} from 'antd';
+import NavBar from "./components/NavBar";
+import {BrowserRouter, Route} from "react-router-dom";
+import News from "./pages/News";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const { Header, Content, Footer } = Layout;
+
+const App = () => {
+    const {
+        token: { colorBgContainer },
+    } = theme.useToken();
+    return (
+        <BrowserRouter>
+            <Layout>
+                <Header style={{background: "lightgrey"}}>
+                    Header
+                </Header>
+                <Content style={{padding: '0 50px'}}>
+                    <NavBar/>
+                    <Layout style={{padding: '24px 0', background: colorBgContainer}}>
+                        <Content style={{padding: '0 150px', minHeight: 600}}>
+
+                            <Route path="/news">
+                                <News/>
+                            </Route>
+
+                        </Content>
+                    </Layout>
+                </Content>
+                <Footer style={{textAlign: 'center', background: "grey"}}>
+                    Footer
+                </Footer>
+            </Layout>
+        </BrowserRouter>
+    );
+};
 
 export default App;
