@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Checkbox, Form, Input} from "antd";
+import TextArea from "antd/es/input/TextArea";
 
 const CreateNewsForm = (props) => {
     const onFinishFailed = (errorInfo) => {
@@ -53,7 +54,8 @@ const CreateNewsForm = (props) => {
             </Form.Item>
 
             <Form.Item label="Содержание" name="body">
-                <Input
+                <TextArea
+                    rows={4}
                     value={body}
                     onChange={e => setBody(e.target.value)}
                 />
