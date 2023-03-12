@@ -7,7 +7,8 @@ const UpdateNewsModal = (props) => {
         <>
             <Modal open={props.isModalOpen}
                    centered={true}
-                   width={600}
+                   width="50%"
+                   title="Редактирование новости"
                    okButtonProps={{ style: { display: 'none' } }}
                    onCancel={props.onCansel}
             >

@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Checkbox, Form, Input} from "antd";
+import TextArea from "antd/es/input/TextArea";
 
 const UpdateNewsForm = (props) => {
     const onFinishFailed = (errorInfo) => {
@@ -41,7 +42,7 @@ const UpdateNewsForm = (props) => {
                 span: 16,
             }}
             style={{
-                maxWidth: 600,
+                width: "90%",
             }}
             initialValues={{
                 remember: true,
@@ -50,7 +51,12 @@ const UpdateNewsForm = (props) => {
             autoComplete="off"
             onFinish={onFinish}
         >
-            <Form.Item label="Заголовок" name="header">
+            <Form.Item
+                label="Заголовок"
+                name="header"
+                rules={[{min: 5, message: "Минимальная длина заголовка - 5 символов"},
+                    {required: true, message: "Минимальная длина заголовка - 5 символов"}]}
+            >
                 <Input
                     defaultValue={header}
                     value={header}
@@ -58,9 +64,14 @@ const UpdateNewsForm = (props) => {
                 />
             </Form.Item>
 
-            <Form.Item label="Содержание" name="body">
-                <Input
-                    defaultValue={body}
+            <Form.Item
+                label="Содержание"
+                name="body"
+                rules={[{ max: 3000, message: "Максимальная длина содержания - 3000 символов"}]}
+            >
+                <TextArea
+                    rows={4}
+                    defaultValue={header}
                     value={body}
                     onChange={e => setBody(e.target.value)}
                 />
@@ -76,7 +87,11 @@ const UpdateNewsForm = (props) => {
                 />
             </Form.Item>
 
-            <Form.Item label="Ссылка на картинку" name="imageUrl">
+            <Form.Item
+                label="Ссылка на картинку"
+                name="imageUrl"
+                rules={[{ required: true, message: "Ссылка на картинку не может быть пустой"}]}
+            >
                 <Input
                     defaultValue={imageUrl}
                     value={imageUrl}

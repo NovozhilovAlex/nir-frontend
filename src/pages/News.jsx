@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NewsCard from "../components/NewsCard";
 import CreateNewsModal from "../components/CreateNewsModal";
 import {Button, Col, Row, Typography} from "antd";
@@ -9,6 +9,18 @@ const News = () => {
     const { Title } = Typography;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isUpdateNewsModalOpen, setIsUpdateNewsModalOpen] = useState(false);
+    const [validMassage, setValidMassage] = useState('');
+
+    const [news, setNews] = useState([]);
+
+    useEffect(() => {
+        NewsService.getAllNews().then((response) => {
+            setNews(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }, [])
+
     const showModal = () => {
         setIsModalOpen(true);
     };
@@ -26,7 +38,10 @@ const News = () => {
         NewsService.createNews(news).then((response) => {
             console.log(response.data);
         }).catch(error => {
-            console.log(error);
+            if (error.response.status === 400) {
+                console.log(error.response.data);
+                setValidMassage(error.response.data);
+            }
         });
         setIsModalOpen(false);
     }
@@ -59,11 +74,16 @@ const News = () => {
                 </Col>
             </Row>
             <Row align="top">
-                <Col>
-                    <Button type="primary" onClick={showModal} style={{float: "right", display: "block", position: "relative"}}>
-                        Создать новость
+                <Col span={4} offset={20}>
+                    <Button type="primary" onClick={showModal}>
+                        Добавить новость
                     </Button>
-                    <CreateNewsModal isModalOpen={isModalOpen} addNews={addNews} onCansel={handleCancel}/>
+                    <CreateNewsModal
+                        isModalOpen={isModalOpen}
+                        addNews={addNews}
+                        onCansel={handleCancel}
+                        validMessage={validMassage}
+                    />
                     <UpdateNewsModal
                         isModalOpen={isUpdateNewsModalOpen}
                         updateNews={updateNews}
@@ -75,6 +95,7 @@ const News = () => {
             <Row justify="center" align="top">
                 <Col>
                     <NewsCard
+                        news={news}
                         deleteNews={deleteNews}
                         showUpdateNewsModal={showUpdateNewsModal}
                         getNewsFromNewsCard={getNewsFromNewsCard}

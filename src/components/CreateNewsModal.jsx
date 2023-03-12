@@ -7,11 +7,12 @@ const CreateNewsModal = (props) => {
         <>
             <Modal open={props.isModalOpen}
                    centered={true}
-                   width={600}
+                   width="50%"
+                   title="Добавление новости"
                    okButtonProps={{ style: { display: 'none' } }}
                    onCancel={props.onCansel}
             >
-                <CreateNewsForm addNews={props.addNews}/>
+                <CreateNewsForm addNews={props.addNews} validMessage={props.validMessage}/>
             </Modal>
         </>
     );

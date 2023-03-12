@@ -2,9 +2,9 @@ import React from 'react';
 import {Menu} from "antd";
 import {Link} from "react-router-dom";
 
-const NavBar = (props) => {
+const NavBar = () => {
     return (
-        <Menu theme="light" mode="horizontal" defaultSelectedKeys={['1']}>
+        <Menu theme="light" mode="horizontal" defaultSelectedKeys={['2']}>
             <Menu.Item key="1">
                 <span>Новости</span>
                 <Link to="/news" />

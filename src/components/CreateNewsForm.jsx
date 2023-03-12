@@ -37,7 +37,7 @@ const CreateNewsForm = (props) => {
                 span: 16,
             }}
             style={{
-                maxWidth: 600,
+                width: "90%"
             }}
             initialValues={{
                 remember: true,
@@ -46,14 +46,23 @@ const CreateNewsForm = (props) => {
             autoComplete="off"
             onFinish={onFinish}
         >
-            <Form.Item label="Заголовок" name="header">
+            <Form.Item
+                label="Заголовок"
+                name="header"
+                rules={[{min: 5, message: "Минимальная длина заголовка - 5 символов"},
+                    {required: true, message: "Минимальная длина заголовка - 5 символов"}]}
+            >
                 <Input
                     value={header}
                     onChange={e => setHeader(e.target.value)}
                 />
             </Form.Item>
 
-            <Form.Item label="Содержание" name="body">
+            <Form.Item
+                label="Содержание"
+                name="body"
+                rules={[{ max: 3000, message: "Максимальная длина содержания - 3000 символов"}]}
+            >
                 <TextArea
                     rows={4}
                     value={body}
@@ -70,7 +79,11 @@ const CreateNewsForm = (props) => {
                 />
             </Form.Item>
 
-            <Form.Item label="Ссылка на картинку" name="imageUrl">
+            <Form.Item
+                label="Ссылка на картинку"
+                name="imageUrl"
+                rules={[{ required: true, message: "Ссылка на картинку не может быть пустой"}]}
+            >
                 <Input
                     value={imageUrl}
                     onChange={e => setImageUrl(e.target.value)}
