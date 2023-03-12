@@ -19,6 +19,7 @@
 
 ### Внешний вид интерфейса на данном этапе
 ![Smt5x5NJIXY](https://user-images.githubusercontent.com/122719523/223444386-6c5f8f52-7cb8-4399-b372-857db77e9a51.jpg)
+![Fh-Zzl9Mz6A](https://user-images.githubusercontent.com/122719523/224544265-cc11331b-ddf6-430b-826a-5add6dfa8bb6.jpg)
 
 ### Запуск приложения
 
