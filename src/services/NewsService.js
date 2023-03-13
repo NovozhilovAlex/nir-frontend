@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const NEWS_BASE_REST_API_URL = 'http://localhost:8080/news/';
+const NEWS_BASE_REST_API_URL = 'http://localhost:8080/news';
 
 class NewsService {
     getAllNews() {
@@ -17,7 +17,7 @@ class NewsService {
     }
 
     deleteNews(id) {
-        return axios.delete(NEWS_BASE_REST_API_URL + `${id}`);
+        return axios.delete(NEWS_BASE_REST_API_URL + `/${id}`);
     }
 }
 
