@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Checkbox, Form, Input} from "antd";
 import TextArea from "antd/es/input/TextArea";
 
@@ -71,7 +71,7 @@ const UpdateNewsForm = (props) => {
             >
                 <TextArea
                     rows={4}
-                    defaultValue={header}
+                    defaultValue={body}
                     value={body}
                     onChange={e => setBody(e.target.value)}
                 />
