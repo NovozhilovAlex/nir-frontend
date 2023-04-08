@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import NewsCard from "../components/NewsCard";
 import CreateNewsModal from "../components/CreateNewsModal";
+import RegistrationModal from "../components/RegistrationModal";
 import {Button, Col, Row, Typography} from "antd";
 import NewsService from "../services/NewsService";
 import UpdateNewsModal from "../components/UpdateNewsModal";
@@ -33,6 +34,18 @@ const News = () => {
     const handleCancelUpdateNewsModal = () => {
         setIsUpdateNewsModalOpen(false);
     };
+
+    // const Registration = (reg) => {
+    //     NewsService.registration(reg).then((response) => {
+    //         console.log(response.data);
+    //     }).catch(error => {
+    //         if (error.response.status === 400) {
+    //             console.log(error.response.data);
+    //             setValidMassage(error.response.data);
+    //         }
+    //     });
+    //     setIsModalOpen(false);
+    // }
 
     const addNews = (news) => {
         NewsService.createNews(news).then((response) => {
@@ -92,6 +105,21 @@ const News = () => {
                     />
                 </Col>
             </Row>
+            
+            <Row align="top">
+                <Col span={4} offset={20}>
+                    <Button type="primary" onClick={showModal}>
+                        Регистрация
+                    </Button>
+                    <RegistrationModal
+                        isModalOpen={isModalOpen}
+                        // Registration={Registration}
+                        onCansel={handleCancel}
+                        validMessage={validMassage}
+                    />
+                </Col>
+            </Row>
+
             <Row justify="center" align="top">
                 <Col>
                     <NewsCard

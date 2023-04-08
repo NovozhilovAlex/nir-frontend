@@ -19,6 +19,9 @@ class NewsService {
     deleteNews(id) {
         return axios.delete(NEWS_BASE_REST_API_URL + `/${id}`);
     }
+    registration(reg) {
+        return axios.post(NEWS_BASE_REST_API_URL, reg);
+    }
 }
 
 export default new NewsService();
