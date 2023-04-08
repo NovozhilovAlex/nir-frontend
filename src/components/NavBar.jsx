@@ -1,7 +1,6 @@
 import React from 'react';
 import {Menu} from "antd";
 import {Link} from "react-router-dom";
-
 const NavBar = () => {
     return (
         <Menu theme="light" mode="horizontal" defaultSelectedKeys={['2']}>
