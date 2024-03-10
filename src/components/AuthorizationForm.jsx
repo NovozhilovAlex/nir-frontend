@@ -1,9 +1,13 @@
 import React, {useState, Option, UserOutlined} from 'react';
 import {Button, Cascader, Form, Input, Select, LockOutlined} from "antd";
 
-const AuthorizationForm = () => {
+const AuthorizationForm = (props) => {
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    props.auth(values.username, values.password);
   };
   return (
     <Form
@@ -25,7 +29,9 @@ const AuthorizationForm = () => {
       >
         <Input
         //   prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Логин" 
+          placeholder="Логин"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
         />
       </Form.Item>
       <Form.Item
@@ -41,6 +47,8 @@ const AuthorizationForm = () => {
         //   prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
           placeholder="Пароль"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
         />
       </Form.Item>
 

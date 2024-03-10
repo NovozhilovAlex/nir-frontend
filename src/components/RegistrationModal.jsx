@@ -12,7 +12,7 @@ const RegistrationModal = (props) => {
                    okButtonProps={{ style: { display: 'none' } }}
                    onCancel={props.onCansel}
             >
-                <RegistrationForm  validMessage={props.validMessage}/>
+                <RegistrationForm registration={props.registration} validMessage={props.validMessage}/>
                 {/* <RegistrationForm Registration={props.Registration} validMessage={props.validMessage}/> */}
 
             </Modal>

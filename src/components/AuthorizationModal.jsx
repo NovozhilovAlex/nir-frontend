@@ -12,7 +12,7 @@ const AuthorizationModal = (props) => {
                    okButtonProps={{ style: { display: 'none' } }}
                    onCancel={props.onCansel}
             >
-                <AuthorizationForm  validMessage={props.validMessage}/>
+                <AuthorizationForm auth={props.auth} validMessage={props.validMessage}/>
                 {/* <RegistrationForm Registration={props.Registration} validMessage={props.validMessage}/> */}
 
             </Modal>

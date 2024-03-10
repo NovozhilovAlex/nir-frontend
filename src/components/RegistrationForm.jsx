@@ -61,19 +61,20 @@ const tailFormItemLayout = {
     },
   },
 };
-const RegistrationForm = () => {
+const RegistrationForm = (props) => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
-  const [form] = Form.useForm();
+  //const [form] = Form.useForm();
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
+    props.registration(values.username, values.password, values.conf);
     // props.Registration(values);
   };
 
-  // const [nickname, setNickname] = useState('');
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
+  const [conf, setConf] = useState('');
+  const [password, setPassword] = useState('');
   // const [confirm, setConfirm] = useState('');
   // // const [address, setAddress] = useState('');
   // const [phone, setPhone] = useState('');
@@ -104,6 +105,7 @@ const RegistrationForm = () => {
   //   label: website,
   //   value: website,
   // }));
+  const [form] = Form.useForm();
   return (
     <Form
       form={form}
@@ -132,7 +134,7 @@ const RegistrationForm = () => {
     >
 
       <Form.Item
-        name="nickname"
+        name="username"
         label="Логин"
         rules={[
           {
@@ -143,7 +145,8 @@ const RegistrationForm = () => {
         ]}
       >
         <Input
-          // value={nickname}
+            value={username}
+            onChange={e => setUsername(e.target.value)}
         />
       </Form.Item> 
 
@@ -177,13 +180,14 @@ const RegistrationForm = () => {
         ]}
         hasFeedback
       >
-        <Input.Password 
-          // value={password}
+        <Input.Password
+            value={password}
+            onChange={e => setPassword(e.target.value)}
         />
       </Form.Item>
 
       <Form.Item
-        name="confirm"
+        name="conf"
         label="Подтверждение пароля"
         dependencies={['password']}
         hasFeedback
@@ -202,8 +206,9 @@ const RegistrationForm = () => {
           }),
         ]}
       >
-        <Input.Password 
-          // value={confirm}
+        <Input.Password
+            value={conf}
+            onChange={e => setConf(e.target.value)}
         />
       </Form.Item>
 

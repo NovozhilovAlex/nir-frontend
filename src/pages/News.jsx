@@ -21,6 +21,11 @@ const News = () => {
     const [validMassage, setValidMassage] = useState('');
 
     const [news, setNews] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [start, setStart] = useState([]);
+    const [end, setEnd] = useState([]);
+    const [limit, setLimit] = useState([]);
+    const [roles, setRoles] = useState([]);
 
     useEffect(() => {
         NewsService.getAllNews().then((response) => {
@@ -82,17 +87,112 @@ const News = () => {
         setIsUpdateNewsModalOpen(false);
     }
 
+    const getNewsByTags = () => {
+        NewsService.getAllNewsByTags(tags).then((response) => {
+            setNews(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+    const getNewsByDateBetween = () => {
+        NewsService.getAllNewsByDateBetween(start, end).then((response) => {
+            setNews(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
+    const getNewsByTagDateLimit = () => {
+        NewsService.getAllNewsByTagDateLimit(tags, limit).then((response) => {
+            setNews(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
     const [updatableNews, setUpdatableNews] = useState({});
     const getNewsFromNewsCard = (news) => {
         setUpdatableNews(news);
     }
-    const onChange = (value) => {
-        console.log('changed', value);
-    };
-    const onChangeCheckbox  = (checkedValues) => {
+
+    const onChangeCheckbox = (checkedValues) => {
         console.log('checked = ', checkedValues);
+
+        setTags(checkedValues);
     };
-    const plainOptions = ['Газ', 'Вода', 'Мусор'];
+    const plainOptions = [
+        {
+            label: 'Газ',
+            value: 'gas'
+        },
+        {
+            label: 'Вода',
+            value: 'water'
+        },
+        {
+            label: 'Мусор',
+            value: 'rubbish'
+        }
+    ];
+
+    const onChangeDate = (date, dateString) => {
+        setStart(dateString[0])
+        setEnd(dateString[1])
+        console.log(dateString);
+    };
+
+    const onChangeLimit = (value) => {
+        console.log('checked = ', value);
+        setLimit(value);
+    };
+
+    const registration = (username, password, conf) => {
+        NewsService.registration(username, password, conf).then((response) => {
+            console.log(response.data);
+        }).catch(error => {
+            if (error.response.status === 400) {
+                console.log(error.response.data);
+                setValidMassage(error.response.data);
+            }
+        });
+        setIsRegModalOpen(false);
+    }
+
+    const auth = (username, password) => {
+        NewsService.auth(username, password).then((response) => {
+            console.log(response.data);
+        }).catch(error => {
+            if (error.response.status === 400) {
+                console.log(error.response.data);
+                setValidMassage(error.response.data);
+            }
+        });
+        NewsService.getRoles(username).then((response) => {
+            console.log(response.data);
+            setRoles(response.data)
+        }).catch(error => {
+            if (error.response.status === 400) {
+                console.log(error.response.data);
+                setValidMassage(error.response.data);
+            }
+        });
+        console.log(roles);
+        setIsAuthModalOpen(false);
+    }
+
+    const isAdmin = () => {
+        return roles.includes('ROLE_ADMIN');
+    }
+
+    const addButtonShow = () => {
+        if (isAdmin()) {
+            return ( <Button type="default" onClick={showModal}>
+                    Добавить новость
+                </Button>
+            )
+        }
+    }
 
     return (
         <div>
@@ -104,14 +204,21 @@ const News = () => {
             <Row className='sort_news'>
                 <Col style={{ display:'flex', flexDirection:'Column'}}>
                     <Checkbox.Group  options={plainOptions} onChange={onChangeCheckbox} />
-                    <InputNumber style={{ marginTop: 10 }} min={1} max={10} defaultValue={3} onChange={onChange} />
-                    <RangePicker style={{ marginTop: 10 }}/>
+                    <InputNumber style={{ marginTop: 10 }} min={1} max={10} onChange={onChangeLimit} />
+                    <RangePicker style={{ marginTop: 10 }} onChange={onChangeDate} placeholder={['От', 'До']}/>
+                    <Button type="default" onClick={getNewsByTags} style={{ marginTop: 10 }}>
+                        Получить новости по тегам
+                    </Button>
+                    <Button type="default" onClick={getNewsByDateBetween} style={{ marginTop: 10 }}>
+                        Получить новости по дате
+                    </Button>
+                    <Button type="default" onClick={getNewsByTagDateLimit} style={{ marginTop: 10 }}>
+                        Получить новости по тегам с лимитом
+                    </Button>
                 </Col>
                 <Col  style={{ display:'flex', flexDirection:'Column'}} offset={15}> 
                     <div >
-                        <Button type="default" onClick={showModal}>
-                            Добавить новость
-                        </Button>
+                        {addButtonShow()}
                         <CreateNewsModal
                             isModalOpen={isModalOpen}
                             addNews={addNews}
@@ -131,9 +238,9 @@ const News = () => {
                         </Button>
                         <RegistrationModal
                             isModalOpen={isRegModalOpen}
-                            // Registration={Registration}
                             onCansel={handleRegCancel}
                             validMessage={validMassage}
+                            registration={registration}
                         />
                     </div>
                     <div >
@@ -144,6 +251,7 @@ const News = () => {
                             isModalOpen={isAuthModalOpen}
                             onCansel={handleAuthCancel}
                             validMessage={validMassage}
+                            auth={auth}
                         />
                     </div>
                 </Col>
@@ -164,6 +272,7 @@ const News = () => {
                         deleteNews={deleteNews}
                         showUpdateNewsModal={showUpdateNewsModal}
                         getNewsFromNewsCard={getNewsFromNewsCard}
+                        isAdmin={isAdmin}
                     />
                 </Col>
             </Row>

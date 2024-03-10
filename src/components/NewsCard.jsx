@@ -3,6 +3,37 @@ import {Button, Card, Tag} from "antd";
 import Meta from "antd/es/card/Meta";
 
 const NewsCard = (props) => {
+
+    const changeButtonShow = (n) => {
+        if (props.isAdmin()) {
+            return ( <Button style={{float: "right"}}
+                             type="text"
+                             size="small"
+                             onClick={() => {
+                                 props.getNewsFromNewsCard(n);
+                                 props.showUpdateNewsModal();
+                             }}
+                >
+                    Изменить
+                </Button>
+            )
+        }
+    }
+
+    const deleteButtonShow = (n) => {
+        if (props.isAdmin()) {
+            return ( <Button style={{float: "right"}}
+                             type="text"
+                             danger
+                             size="small"
+                             onClick={() => props.deleteNews(n.id)}
+                >
+                    Удалить
+                </Button>
+            )
+        }
+    }
+
     const newsCards = () => (
         props.news.map((n) => {
             let d = new Date(n.createDate);
@@ -25,24 +56,8 @@ const NewsCard = (props) => {
                             </Tag>
                         );
                     })}
-                    <Button style={{float: "right"}}
-                            type="text"
-                            danger
-                            size="small"
-                            onClick={() => props.deleteNews(n.id)}
-                    >
-                        Удалить
-                    </Button>
-                    <Button style={{float: "right"}}
-                            type="text"
-                            size="small"
-                            onClick={() => {
-                                props.getNewsFromNewsCard(n);
-                                props.showUpdateNewsModal();
-                            }}
-                    >
-                        Изменить
-                    </Button>
+                    {changeButtonShow(n)}
+                    {deleteButtonShow(n)}
                 </Card>
             );
         })
