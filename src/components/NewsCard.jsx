@@ -7,12 +7,13 @@ const NewsCard = (props) => {
         props.news.map((n) => {
             let d = new Date(n.createDate);
             return (
-                <Card style={{ marginTop: 20, backgroundColor: "lightgray"}}
+                <Card style={{ marginTop: 20, backgroundColor: "lightgray", width: 700, height: 720}}
                       title={n.header}
                       bordered={false}
-                      cover={<img
+                      cover={<img 
                           alt="example"
                           src={n.imageUrl}
+                          
                       />}
                 >
                     {n.body}

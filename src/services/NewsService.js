@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const NEWS_BASE_REST_API_URL = 'http://localhost:8080/news';
+const NEWS_BASE_REST_API_URL = 'http://localhost:8081/news';
 
 class NewsService {
     getAllNews() {
@@ -19,6 +19,9 @@ class NewsService {
     deleteNews(id) {
         return axios.delete(NEWS_BASE_REST_API_URL + `/${id}`);
     }
+    // registration(reg) {
+    //     return axios.post(NEWS_BASE_REST_API_URL, reg);
+    // }
 }
 
 export default new NewsService();
