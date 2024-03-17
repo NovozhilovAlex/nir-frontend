@@ -8,6 +8,7 @@ import RegistrationModal from "../components/RegistrationModal";
 import AuthorizationModal from '../components/AuthorizationModal';
 import { DatePicker, Space } from 'antd';
 import Column from 'antd/es/table/Column';
+import Cookies from 'universal-cookie';
 
 
 const { RangePicker } = DatePicker;
@@ -111,6 +112,15 @@ const News = () => {
         })
     }
 
+    const cookies = new Cookies();
+    const generateReport = () => {
+        NewsService.generateReport(tags, start, end, limit, cookies.get('jwt')).then((response) => {
+            console.log(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
+
     const [updatableNews, setUpdatableNews] = useState({});
     const getNewsFromNewsCard = (news) => {
         setUpdatableNews(news);
@@ -161,6 +171,8 @@ const News = () => {
 
     const auth = (username, password) => {
         NewsService.auth(username, password).then((response) => {
+            cookies.set('jwt', response.data.token, { path: 'http://localhost:3000/news' });
+            document.cookie = 'jwt=' + response.data.token + ';max-age=604800;domain=http://localhost:3000/news';
             console.log(response.data);
         }).catch(error => {
             if (error.response.status === 400) {
@@ -214,6 +226,9 @@ const News = () => {
                     </Button>
                     <Button type="default" onClick={getNewsByTagDateLimit} style={{ marginTop: 10 }}>
                         Получить новости по тегам с лимитом
+                    </Button>
+                    <Button type="default" onClick={generateReport} style={{ marginTop: 15 }}>
+                        Сгенерировать отчеты
                     </Button>
                 </Col>
                 <Col  style={{ display:'flex', flexDirection:'Column'}} offset={15}> 

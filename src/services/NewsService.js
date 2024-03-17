@@ -22,6 +22,11 @@ class NewsService {
         return axios.get(NEWS_BASE_REST_API_URL + '/sort_all?tags=' + tags + '&limit=' + limit)
     }
 
+    generateReport(tags, start, end, limit, token) {
+        return axios.get(NEWS_BASE_REST_API_URL + '/report?tags=' + tags + '&start=' + start + '&end=' + end +
+            '&limit=' + limit, { headers: {Authorization: 'Bearer ' + token } });
+    }
+
     createNews(news) {
         return axios.post(NEWS_BASE_REST_API_URL, news);
     }
