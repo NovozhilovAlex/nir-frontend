@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import NewsCard from "../components/NewsCard";
 import CreateNewsModal from "../components/CreateNewsModal";
-import {Button, Col, InputNumber, Row, Typography, Checkbox } from "antd";
+import {Button, Checkbox, Col, DatePicker, InputNumber, Row, Typography} from "antd";
 import NewsService from "../services/NewsService";
 import UpdateNewsModal from "../components/UpdateNewsModal";
 import RegistrationModal from "../components/RegistrationModal";
 import AuthorizationModal from '../components/AuthorizationModal';
-import { DatePicker, Space } from 'antd';
 import Column from 'antd/es/table/Column';
 import Cookies from 'universal-cookie';
 import {render} from "react-dom";
@@ -31,13 +30,29 @@ const News = () => {
     const [limit, setLimit] = useState([]);
     const [roles, setRoles] = useState([]);
     const [textMsg, setTextMsg] = useState('');
+    //const [isAdmin, setIsAdmin] = useState(false);
+
+    const cookies = new Cookies();
 
     useEffect(() => {
         NewsService.getAllNews().then((response) => {
             setNews(response.data);
         }).catch(error => {
             console.log(error);
-        })
+            setValidMassage(error.response.data);
+            setTextMsg(error.response.data)
+            setIsOkModalOpen(true)
+        });
+
+        NewsService.getRoles(cookies.get('jwt')).then((response) => {
+            console.log(response.data)
+            setRoles(response.data);
+        }).catch(error => {
+            console.log(error);
+            setValidMassage(error.response.data);
+            setTextMsg(error.response.data)
+            setIsOkModalOpen(true)
+        });
     }, [])
 
     const showNews = () => {
@@ -146,10 +161,13 @@ const News = () => {
         })
     }
 
-    const cookies = new Cookies();
+
     const generateReport = () => {
         NewsService.generateReport(tags, start, end, limit, cookies.get('jwt')).then((response) => {
             console.log(response.data);
+            const link = document.createElement("a");
+            link.href = "http://localhost:8080/news/extract/" + response.data;
+            link.click();
         }).catch(error => {
             console.log(error);
         })
@@ -206,21 +224,25 @@ const News = () => {
     const auth = (username, password) => {
         NewsService.auth(username, password).then((response) => {
             cookies.set('jwt', response.data.token, { path: 'http://localhost:3000/news' });
-            document.cookie = 'jwt=' + response.data.token + ';max-age=604800;domain=http://localhost:3000/news';
-            console.log(response.data);
+            //document.cookie = 'jwt=' + response.data.token + ';max-age=604800;domain=http://localhost:3000/news';
+            console.log(response.data.token);
         }).catch(error => {
             if (error.response.status === 400) {
                 console.log(error.response.data);
                 setValidMassage(error.response.data);
+                setTextMsg(error.response.data)
+                setIsOkModalOpen(true)
             }
         });
-        NewsService.getRoles(username).then((response) => {
+        NewsService.getRoles(cookies.get('jwt')).then((response) => {
             console.log(response.data);
             setRoles(response.data)
         }).catch(error => {
             if (error.response.status === 400) {
                 console.log(error.response.data);
                 setValidMassage(error.response.data);
+                setTextMsg(error.response.data)
+                setIsOkModalOpen(true)
             }
         });
         console.log(roles);
@@ -228,6 +250,15 @@ const News = () => {
     }
 
     const isAdmin = () => {
+        // NewsService.getRoles(cookies.get('jwt')).then((response) => {
+        //     console.log(response.data)
+        //     setRoles(response.data);
+        // }).catch(error => {
+        //     console.log(error);
+        //     setValidMassage(error.response.data);
+        //     setTextMsg(error.response.data)
+        //     setIsOkModalOpen(true)
+        // });
         return roles.includes('ROLE_ADMIN');
     }
 

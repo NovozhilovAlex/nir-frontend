@@ -55,8 +55,8 @@ class NewsService {
         });
     }
 
-    getRoles(username) {
-        return axios.get(BASE_REST_API + '/get_roles?username=' + username)
+    getRoles(token) {
+        return axios.get(BASE_REST_API + '/get_roles?token=' + token)
     }
 }
 
