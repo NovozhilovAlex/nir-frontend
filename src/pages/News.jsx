@@ -9,6 +9,8 @@ import AuthorizationModal from '../components/AuthorizationModal';
 import { DatePicker, Space } from 'antd';
 import Column from 'antd/es/table/Column';
 import Cookies from 'universal-cookie';
+import {render} from "react-dom";
+import OkModal from "../components/OkModal";
 
 
 const { RangePicker } = DatePicker;
@@ -20,6 +22,7 @@ const News = () => {
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [isUpdateNewsModalOpen, setIsUpdateNewsModalOpen] = useState(false);
     const [validMassage, setValidMassage] = useState('');
+    const [isOkModalOpen, setIsOkModalOpen] = useState(false);
 
     const [news, setNews] = useState([]);
     const [tags, setTags] = useState([]);
@@ -27,6 +30,7 @@ const News = () => {
     const [end, setEnd] = useState([]);
     const [limit, setLimit] = useState([]);
     const [roles, setRoles] = useState([]);
+    const [textMsg, setTextMsg] = useState('');
 
     useEffect(() => {
         NewsService.getAllNews().then((response) => {
@@ -35,6 +39,14 @@ const News = () => {
             console.log(error);
         })
     }, [])
+
+    const showNews = () => {
+        NewsService.getAllNews().then((response) => {
+            setNews(response.data);
+        }).catch(error => {
+            console.log(error);
+        })
+    }
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -60,6 +72,9 @@ const News = () => {
     const handleCancelUpdateNewsModal = () => {
         setIsUpdateNewsModalOpen(false);
     };
+    const handleOkCancel = () => {
+        setIsOkModalOpen(false);
+    };
 
     const addNews = (news) => {
         NewsService.createNews(news).then((response) => {
@@ -68,24 +83,43 @@ const News = () => {
             if (error.response.status === 400) {
                 console.log(error.response.data);
                 setValidMassage(error.response.data);
+                setTextMsg(error.response.data)
+                setIsOkModalOpen(true)
             }
         });
         setIsModalOpen(false);
+        showNews()
+        const domNode = document.getElementById('root');
+        render(<News />, domNode);
     }
     const deleteNews = (id) => {
         NewsService.deleteNews(id).then((response) => {
             console.log(response.data);
+            setTextMsg("Новость удалена")
+            setIsOkModalOpen(true)
         }).catch(error => {
             console.log(error);
+            setTextMsg(error.response.data)
+            setIsOkModalOpen(true)
         });
+        showNews()
+        const domNode = document.getElementById('root');
+        render(<News />, domNode);
     }
     const updateNews = (news) => {
         NewsService.updateNews(news).then((response) => {
             console.log(response.data);
+            setTextMsg("Новость изменена")
+            setIsOkModalOpen(true)
         }).catch(error => {
             console.log(error);
+            setTextMsg(error.response.data)
+            setIsOkModalOpen(true)
         });
         setIsUpdateNewsModalOpen(false);
+        showNews()
+        const domNode = document.getElementById('root');
+        render(<News />, domNode);
     }
 
     const getNewsByTags = () => {
@@ -206,6 +240,15 @@ const News = () => {
         }
     }
 
+    const reportButtonShow = () => {
+        if (isAdmin()) {
+            return ( <Button type="default" onClick={generateReport} style={{ marginTop: 15 }}>
+                    Сгенерировать отчеты
+                </Button>
+            )
+        }
+    }
+
     return (
         <div>
             <Row justify="center" align="top">
@@ -227,9 +270,7 @@ const News = () => {
                     <Button type="default" onClick={getNewsByTagDateLimit} style={{ marginTop: 10 }}>
                         Получить новости по тегам с лимитом
                     </Button>
-                    <Button type="default" onClick={generateReport} style={{ marginTop: 15 }}>
-                        Сгенерировать отчеты
-                    </Button>
+                    {reportButtonShow()}
                 </Col>
                 <Col  style={{ display:'flex', flexDirection:'Column'}} offset={15}> 
                     <div >
@@ -282,6 +323,12 @@ const News = () => {
             </Row> */}
             <Row justify="center" align="top">
                 <Col>
+                    <OkModal
+                        isModalOpen={isOkModalOpen}
+                        onCansel={handleOkCancel}
+                        validMessage={validMassage}
+                        text={textMsg}
+                    />
                     <NewsCard
                         news={news}
                         deleteNews={deleteNews}
